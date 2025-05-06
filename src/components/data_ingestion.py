@@ -5,8 +5,8 @@ from src.logger import logging
 import pandas as pd
 from sklearn.model_selection import train_test_split
 from dataclasses import dataclass
-# from src.components.data_transformation import DataTransformation
-# from src.components.data_transformation import DataTransformationConfig
+from src.components.data_transformation import DataTransformation
+from src.components.data_transformation import DataTransformationConfig
 # from src.components.model_trainer import ModelTrainer, ModelTrainerConfig
 @dataclass
 class DataIngestionConfig:
@@ -21,7 +21,7 @@ class DataIngestion:
     def initiate_data_ingestion(self):
         logging.info("Data Ingestion method starts")
         try:
-            df = pd.read_csv('notebook/data/cleaned_emotion_data.csv')
+            df = pd.read_csv('notebook/data/emotion_dataset_raw.csv')
 
             logging.info("Read the dataset as dataframe")
 
@@ -50,10 +50,10 @@ class DataIngestion:
         
 if __name__=='__main__':
     obj = DataIngestion()
-    obj.initiate_data_ingestion()
+    train_data,test_data,_ = obj.initiate_data_ingestion()
 
-    # data_transformation = DataTransformation()
-    # train_arr, test_arr, _ = data_transformation.initiate_data_transformation(train_data, test_data)
+    data_transformation = DataTransformation()
+    data_transformation.initiate_data_transformation('notebook/data/emotion_dataset_raw.csv')
 
     # modeltrainer = ModelTrainer()
     # print(modeltrainer.initiate_model_trainer(train_arr, test_arr))

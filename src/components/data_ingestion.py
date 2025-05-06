@@ -48,15 +48,23 @@ class DataIngestion:
         except Exception as e:
             raise CustomException(e, sys) 
         
-if __name__=='__main__':
-    obj = DataIngestion()
-    train_data,test_data,_ = obj.initiate_data_ingestion()
+        
+if __name__ == '__main__':
+    from src.components.data_ingestion import DataIngestion
+    from src.components.data_transformation import DataTransformation
+    from src.components.model_trainer import ModelTrainer
 
-    data_transformation = DataTransformation()
-    data_transformation.initiate_data_transformation('notebook/data/emotion_dataset_raw.csv')
+    ingestion = DataIngestion()
+    train_path, test_path, raw_path = ingestion.initiate_data_ingestion()
 
-    # modeltrainer = ModelTrainer()
-    # print(modeltrainer.initiate_model_trainer(train_arr, test_arr))
+    transformation = DataTransformation()
+    X_train, X_test, y_train, y_test, _, _ = transformation.initiate_data_transformation(raw_path)
+
+    trainer = ModelTrainer()
+    report = trainer.initiate_model_trainer(X_train, X_test, y_train, y_test)
+
+    print("Model evaluation report:")
+    print(report)
 
     
 

@@ -62,6 +62,13 @@
             font-size: 22px;
             color: #333;
         }
+
+        .error {
+            margin-top: 20px;
+            text-align: center;
+            color: red;
+            font-weight: bold;
+        }
     </style>
 </head>
 <body>
@@ -74,10 +81,24 @@
         </form>
 
         {% if results %}
-        <div class="result">
-            <h2>Detected Emotion:</h2>
-            <p><strong>{{ results }}</strong></p>
-        </div>
+            {% if "Error" in results or "Please" in results %}
+                <div class="error">{{ results }}</div>
+            {% else %}
+                <div class="result">
+                    <h2>Detected Emotion:</h2>
+                    <p><strong>{{ results|capitalize }}</strong>
+                    {% set emoji_dict = {
+                        'anger': '😠',
+                        'disgust': '🤮',
+                        'fear': '😨',
+                        'joy': '😂',
+                        'neutral': '😐',
+                        'sadness': '😔',
+                        'surprise': '😮'
+                    } %}
+                    {{ emoji_dict[results.lower()] if results.lower() in emoji_dict else '' }}</p>
+                </div>
+            {% endif %}
         {% endif %}
     </div>
 </body>

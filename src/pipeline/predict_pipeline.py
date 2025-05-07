@@ -3,33 +3,44 @@ import sys
 import pandas as pd
 from src.exception import CustomException
 from src.utils import load_object
+from src.logger import logging
 
 
 class PredictPipeline:
     def __init__(self):
-        pass
+        self.model_path = os.path.join('artifacts', 'model.pkl')
+        self.preprocessor_path = os.path.join('artifacts', 'preprocessor.pkl')
+        self.label_encoder_path = os.path.join('artifacts', 'label_encoder.pkl')
 
     def predict(self, features):
         try:
-            model_path = os.path.join('artifacts', 'model.pkl')
-            preprocessor_path = os.path.join('artifacts', 'preprocessor.pkl')
+            logging.info(" Loading model and preprocessor...")
+            model = load_object(self.model_path)
+            preprocessor = load_object(self.preprocessor_path)
+            label_encoder = load_object(self.label_encoder_path)
 
-            print("Before Loading")
-            model = load_object(file_path=model_path)
-            preprocessor = load_object(file_path=preprocessor_path)
-            print("After Loading")
+            logging.info(" Model and vectorizer loaded successfully.")
 
-            # Ensure features is a DataFrame with a 'text' column
+            
             if isinstance(features, str):
                 features = pd.DataFrame({"text": [features]})
             elif isinstance(features, dict):
                 features = pd.DataFrame(features)
 
-            # Transform and predict
-            transformed_features = preprocessor.transform(features)
-            preds = model.predict(transformed_features)
+            logging.info(f" Raw Input: {features.head().to_dict()}")
 
-            return preds
+            # Preprocess text and predict
+            transformed_features = preprocessor.transform(features["text"])
+            predictions = model.predict(transformed_features)
+
+            # Decode label 
+            if label_encoder:
+                decoded_preds = label_encoder.inverse_transform(predictions)
+                logging.info(f" Final Prediction: {decoded_preds[0]}")
+                return decoded_preds
+            else:
+                logging.warning(" No label encoder found. Returning raw prediction.")
+                return predictions
 
         except Exception as e:
             raise CustomException(e, sys)

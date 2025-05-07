@@ -63,12 +63,12 @@ Access the applications via http://localhost:8501 for Streamlit and http://local
 
  ## Sample Inputs
 ### Try the following sentences to test the emotion detection:
-"I'm feeling fantastic today!"
-"This is so frustrating and annoying."
-"I am scared of the dark."
-"I feel so sad and lonely."
-"It's just another regular day."
-"Wow! That was unexpected!"
+#### "I'm feeling fantastic today!"
+#### "This is so frustrating and annoying."
+#### "I am scared of the dark."
+#### "I feel so sad and lonely."
+#### "It's just another regular day."
+#### "Wow! That was unexpected!"
 
 ## License
 This project is licensed under the MIT License. See the LICENSE file for details.
